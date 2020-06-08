@@ -13,17 +13,20 @@ Today, we begin the first of a 4-Phase build of an authentication system, writte
 
 ### Links and Resources
 - [submission PR class-11](https://github.com/401-advanced-javascript-raghad/auth-server/pull/2)
+- [submission PR class-12](https://github.com/401-advanced-javascript-raghad/auth-server/pull/4)
 
 ### Modules
 #### `Node.js` , `Postman` , `Swagger`
 
 ### Packages
-#### `express` , `jest` , `supertest` , `base-64` ,mongoose`, `pcryptjs
+#### `express` , `jest` , `supertest` , `base-64` ,mongoose`, `pcryptjs`
 
 #### How to initialize/run your application
 - signin : POST - http://localhost:3000/signin
 - signup: POST - http://localhost:3000/signup
 - GET ALL: GET - http://localhost:3000/users
+
+- GET : GET - http://localhost:3000/oauth
 
 #### Tests
 
