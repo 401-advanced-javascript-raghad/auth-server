@@ -14,8 +14,15 @@ const app = express();
 app.use(morgan('dev'));
 app.use(cors());
 app.use(express.json());
-
 app.use(authRouter);
+// Website Files
+app.use(express.static('./public'));
+// Esoteric Resources
+const oauth = require('./auth/middleware/oauth');
+// Routes
+app.get('/oauth', oauth, (req, res) => {
+  res.status(200).send(req.token);
+});
 
 app.use('*', notFoundHandler); 
 app.use(serverErrorHandler); 
