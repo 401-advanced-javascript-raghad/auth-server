@@ -28,12 +28,14 @@ Today, we begin the first of a 4-Phase build of an authentication system, writte
 
 - GET : GET - http://localhost:3000/oauth
 
+- GET : GET - http://localhost:3000/secret
+
 #### Tests
 
 - Test: `node index.js` or `nodemon`
 
 #### UML
-![UML-Diagram]()
+![UML-Diagram](auth.png)
 
 
 
