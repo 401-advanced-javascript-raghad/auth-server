@@ -8,7 +8,7 @@ const mongoose = require('mongoose');
 const authRouter = require('../src/auth/router');
 const notFoundHandler = require('./middleware/404');
 const serverErrorHandler = require('./middleware/500');
-const bearer = require('./auth/middleware/bearer');
+const bearer = require('./auth/middleware/bearer-auth');
 const app = express();
 
 
@@ -26,12 +26,12 @@ app.get('/oauth', oauth, (req, res) => {
   res.status(200).send(req.token);
 });
 
-app.get('/protected', bearer, (req, res)=> {
-  res.status(200).json(req.user);
+app.get('/secret', bearer, (req, res)=> {
   res.cookie('token', req.token, {
     expires: new Date(Date.now() + 900000),
     httpOnly : false,
   });
+  res.status(200).json(req.user);
 });
 
 app.get('/public',(req, res)=> {

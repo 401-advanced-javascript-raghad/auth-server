@@ -33,6 +33,7 @@ class Myusers extends Model {
     const token = jwt.sign({ username: user.username }, SECRET);
     return token;
   }
+
   async verifyToken(token) {
     try{
       const tokenObj = await jwt.verify(token, SECRET);
