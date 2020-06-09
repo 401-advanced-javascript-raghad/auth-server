@@ -8,6 +8,7 @@ const mongoose = require('mongoose');
 const authRouter = require('../src/auth/router');
 const notFoundHandler = require('./middleware/404');
 const serverErrorHandler = require('./middleware/500');
+const bearer = require('./auth/middleware/bearer');
 const app = express();
 
 
@@ -19,11 +20,23 @@ app.use(authRouter);
 app.use(express.static('./public'));
 // Esoteric Resources
 const oauth = require('./auth/middleware/oauth');
+
 // Routes
 app.get('/oauth', oauth, (req, res) => {
   res.status(200).send(req.token);
 });
 
+app.get('/protected', bearer, (req, res)=> {
+  res.status(200).json(req.user);
+  res.cookie('token', req.token, {
+    expires: new Date(Date.now() + 900000),
+    httpOnly : false,
+  });
+});
+
+app.get('/public',(req, res)=> {
+  res.status(200).send('public-route response.');
+});
 app.use('*', notFoundHandler); 
 app.use(serverErrorHandler); 
 
