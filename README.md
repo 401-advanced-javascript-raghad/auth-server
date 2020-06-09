@@ -32,7 +32,7 @@ Today, we begin the first of a 4-Phase build of an authentication system, writte
 
 #### Tests
 
-- Test: `node index.js` or `nodemon`
+- Test: `node index.js` or `nodemon` or `npm run start`
 
 #### UML
 ![UML-Diagram](auth.png)
