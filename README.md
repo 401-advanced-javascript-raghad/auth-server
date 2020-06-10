@@ -30,6 +30,11 @@ Today, we begin the first of a 4-Phase build of an authentication system, writte
 
 - GET : GET - http://localhost:3000/secret
 
+- add : POST - http://localhost:3000/add
+- read: GET - http://localhost:3000/read
+- change : PUT - http://localhost:3000/change
+- delete : DELETE - http://localhost:3000/delete
+
 #### Tests
 
 - Test: `node index.js` or `nodemon` or `npm run start`
