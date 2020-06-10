@@ -9,15 +9,21 @@ const bcryptjs = require('bcryptjs');
 
 const SECRET = process.env.SECRET || 'secret';
 
+let roles = {
+  user: ['read'],
+  writer: ['read', 'add'],
+  editor: ['read', 'change', 'add'],
+  admin: ['read', 'change', 'add', 'remove'],
+};
+
 class Myusers extends Model {
   constructor() {
     super(schema);
   }
-
+ 
   async save(record) {
     let data = await this.get({ username: record.username });
     if (!data[record.username]) {
-      //   record.password  = await bcryptjs.hash(record.password, 5);
       return this.create(record);
     }
     return Promise.reject('This user is exists!');
@@ -29,23 +35,32 @@ class Myusers extends Model {
     return valid ? data[0] : Promise.reject();
   }
 
-  generateToken(user) {
-    const token = jwt.sign({ username: user.username }, SECRET);
+  generateToken(user){
+    const token =  jwt.sign({
+      username: user.username,
+      capabities: roles[user.role],
+    }, SECRET);
     return token;
   }
-
-  async verifyToken(token) {
-    try{
-      const tokenObj = await jwt.verify(token, SECRET);
-      const data = await this.get({ username: tokenObj.username });
-      if (data.length !== 0) {
-        return Promise.resolve(data[0]);
-      }else{
-        return Promise.reject('User is NOT FOUND');
-      }
-    }catch(e){
-      return Promise.reject(e.message);
+  can (permission){
+    if(permission){
+      Promise.resolve('true');
+    }else{
+      Promise.reject('false');
     }
+  }
+  verifyToken(token) {
+    const schemaa = this.schema;
+    return jwt.verify(token, SECRET, async function(err, decoded) {
+      if (err) {
+        return Promise.reject(err);
+      }      
+      const result = await schemaa.findOne({ username: decoded.username });
+      if (result) {
+        return Promise.resolve(decoded);
+      } 
+      return Promise.reject();
+    });
   }
 }
 
