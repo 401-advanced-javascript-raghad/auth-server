@@ -23,10 +23,11 @@ class Myusers extends Model {
  
   async save(record) {
     let data = await this.get({ username: record.username });
-    if (!data[record.username]) {
+    if(data.length === 0){
       return this.create(record);
+    }else{
+      return Promise.reject('This user is exists!');
     }
-    return Promise.reject('This user is exists!');
   }
 
   async authenticateBasic(username, password) {
@@ -35,32 +36,34 @@ class Myusers extends Model {
     return valid ? data[0] : Promise.reject();
   }
 
-  generateToken(user){
+  generateToken(user){    
     const token =  jwt.sign({
+      exp: Math.floor(Date.now() / 1000) + (15 * 60),
+      algorithm:  'RS384',
       username: user.username,
-      capabities: roles[user.role],
+      capabilities: roles[user.role],
     }, SECRET);
     return token;
   }
-  can (permission){
+  async can (permission){
     if(permission){
       Promise.resolve('true');
     }else{
       Promise.reject('false');
     }
   }
-  verifyToken(token) {
-    const schemaa = this.schema;
-    return jwt.verify(token, SECRET, async function(err, decoded) {
-      if (err) {
-        return Promise.reject(err);
-      }      
-      const result = await schemaa.findOne({ username: decoded.username });
-      if (result) {
-        return Promise.resolve(decoded);
-      } 
-      return Promise.reject();
-    });
+  async verifyToken(token) {
+    try {
+      const tokenObject = await jwt.verify(token, SECRET);
+      const result = await this.get({username : tokenObject.username});
+      if (result.length != 0) {
+        return Promise.resolve(tokenObject);
+      } else {
+        return Promise.reject('User is not found!');
+      }
+    } catch (e) {
+      return Promise.reject(e.message);
+    }
   }
 }
 

@@ -12,7 +12,7 @@ async function signup (req,res){
   try{
     const user = await users.save(req.body);
     const token = users.generateToken(user);
-    res.status(200).json({token});
+    res.status(200).json({token: token , user: user });
   }
   catch(err){
     res.status(403).send(err.message);
