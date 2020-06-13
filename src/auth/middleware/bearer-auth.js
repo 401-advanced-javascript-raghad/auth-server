@@ -10,10 +10,10 @@ module.exports = (req, res, next) => {
   }
 
   let token = req.headers.authorization.split(' ').pop();
-  users.verifyToken(token) //here eather we will receve reject/resolve so we need to deal with both 
+  users.verifyToken(token)
     .then(userObject =>{
-      // console.log('userObject .....', userObject);
-      req.user = userObject;
+      req.user = userObject.username;
+      req.capabilities = userObject.capabilities;
       next();
     })
     .catch(err => next('protected ... invalid uesr token'));
